@@ -380,6 +380,14 @@
                 "spicy": "🌶️"
             };
 
+            function updateCardEmoji(card) {
+                const keyword = card.dataset.keyword;
+                const emojiSpan = card.querySelector('.card-emoji');
+                if (emojiSpan) {
+                    emojiSpan.textContent = emojiMap[keyword] || '';
+                }
+            }
+
             function initializeBoard() {
                 document.querySelectorAll('.card').forEach(card => {
                     // Ensure new card structure is applied
@@ -387,6 +395,18 @@
                         const text = card.textContent.replace(/×/g, '').trim();
                         card.innerHTML = `<span class="card-emoji"></span><span class="card-text">${text}</span>`;
                     }
+                    
+                    // Add delete button if missing
+                    if (!card.querySelector('.delete-card-btn')) {
+                        const delBtn = document.createElement('button');
+                        delBtn.className = 'delete-card-btn';
+                        delBtn.textContent = '×';
+                        card.appendChild(delBtn);
+                    }
+
+                    // Sync Emoji
+                    updateCardEmoji(card);
+                    
                     addCardEventListeners(card);
                 });
 
@@ -538,8 +558,13 @@
                 textSpan.className = 'card-text';
                 textSpan.textContent = text;
 
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-card-btn';
+                delBtn.textContent = '×';
+
                 card.appendChild(emojiSpan);
                 card.appendChild(textSpan);
+                card.appendChild(delBtn);
 
                 addCardEventListeners(card);
                 return card;
