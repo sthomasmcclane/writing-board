@@ -1,0 +1,11 @@
+services:
+  writing-board:
+    build: .
+    container_name: writing-board
+    ports:
+      - "5080:5000"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=Australia/Brisbane
+    restart: unless-stopped
