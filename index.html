@@ -167,6 +167,7 @@
         .fa-film { color: #7a869a; }          /* Scripts */
         .fa-pepper-hot { color: #d93025; }    /* Spicy */
         .fa-face-smile { color: #fbbc05; }    /* Default */
+        .fa-list-check { color: #4285f4; }    /* Tasks Icon */
 
         .delete-card-btn {
             position: absolute;
@@ -369,6 +370,8 @@
             <input type="text" id="cardTitleInput">
             <label for="cardUrlInput">URL:</label>
             <input type="text" id="cardUrlInput" placeholder="https://example.com">
+            <label for="cardTasksInput">Tasks URL (Google Tasks List):</label>
+            <input type="text" id="cardTasksInput" placeholder="https://tasks.google.com/tasks/list/...">
             <label for="cardKeywordInput">Keyword:</label>
             <input type="text" id="cardKeywordInput" placeholder="e.g., comics, fiction, ideas...">
             <div class="modal-buttons">
@@ -421,6 +424,18 @@
                         delBtn.className = 'delete-card-btn';
                         delBtn.textContent = '×';
                         card.appendChild(delBtn);
+                    }
+
+                    // Restore Tasks icon if URL exists
+                    if (card.dataset.tasks && !card.querySelector('.tasks-icon')) {
+                        const tasksIcon = document.createElement('span');
+                        tasksIcon.className = 'tasks-icon';
+                        tasksIcon.style.position = 'absolute';
+                        tasksIcon.style.bottom = '5px';
+                        tasksIcon.style.left = '8px';
+                        tasksIcon.style.fontSize = '14px';
+                        tasksIcon.innerHTML = '<i class="fa-solid fa-list-check"></i>';
+                        card.appendChild(tasksIcon);
                     }
 
                     // Sync Emoji
@@ -477,6 +492,16 @@
                         }
                     });
                 }
+
+                const tasksIcon = card.querySelector('.tasks-icon');
+                if (tasksIcon) {
+                    tasksIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (card.dataset.tasks) {
+                            window.open(card.dataset.tasks, '_blank');
+                        }
+                    });
+                }
             }
 
             function addColumnEventListeners(column) {
@@ -512,10 +537,12 @@
                 currentEditingCard = card;
                 const cardText = card.querySelector('.card-text').textContent;
                 const cardUrl = card.dataset.url || '';
+                const cardTasks = card.dataset.tasks || '';
                 const cardKeyword = card.dataset.keyword || '';
 
                 document.getElementById('cardTitleInput').value = cardText;
                 document.getElementById('cardUrlInput').value = cardUrl;
+                document.getElementById('cardTasksInput').value = cardTasks;
                 document.getElementById('cardKeywordInput').value = cardKeyword;
 
                 document.getElementById('editModal').style.display = 'block';
@@ -531,6 +558,7 @@
 
                 const newText = document.getElementById('cardTitleInput').value.trim();
                 const newUrl = document.getElementById('cardUrlInput').value.trim();
+                const newTasks = document.getElementById('cardTasksInput').value.trim();
                 const newKeyword = document.getElementById('cardKeywordInput').value.trim().toLowerCase();
 
                 // Update Text
@@ -551,6 +579,31 @@
                     currentEditingCard.classList.remove('linked');
                     const linkIcon = currentEditingCard.querySelector('.link-icon');
                     if (linkIcon) linkIcon.remove();
+                }
+
+                // Update Tasks Icon
+                if (newTasks) {
+                    currentEditingCard.dataset.tasks = newTasks;
+                    if (!currentEditingCard.querySelector('.tasks-icon')) {
+                        const tasksIcon = document.createElement('span');
+                        tasksIcon.className = 'tasks-icon';
+                        tasksIcon.style.position = 'absolute';
+                        tasksIcon.style.bottom = '5px';
+                        tasksIcon.style.left = '8px';
+                        tasksIcon.style.fontSize = '14px';
+                        tasksIcon.innerHTML = '<i class="fa-solid fa-list-check"></i>';
+                        currentEditingCard.appendChild(tasksIcon);
+                        
+                        // Add click listener for tasks
+                        tasksIcon.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            window.open(newTasks, '_blank');
+                        });
+                    }
+                } else {
+                    delete currentEditingCard.dataset.tasks;
+                    const tasksIcon = currentEditingCard.querySelector('.tasks-icon');
+                    if (tasksIcon) tasksIcon.remove();
                 }
 
                 // Update Emoji
