@@ -4,6 +4,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Writing Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         /* --- General Styles --- */
         body {
@@ -152,7 +153,20 @@
 
         .card-emoji {
             font-size: 18px;
+            width: 24px;
+            display: flex;
+            justify-content: center;
         }
+
+        /* --- Icon Colors --- */
+        .fa-comments { color: #1a73e8; }      /* Comics */
+        .fa-heart { color: #ea4335; }         /* Fanfiction */
+        .fa-book { color: #34a853; }          /* Fiction */
+        .fa-lightbulb { color: #fbbc05; }     /* Ideas */
+        .fa-teddy-bear { color: #a5694f; }    /* Kids - using bear */
+        .fa-film { color: #7a869a; }          /* Scripts */
+        .fa-pepper-hot { color: #d93025; }    /* Spicy */
+        .fa-face-smile { color: #fbbc05; }    /* Default */
 
         .delete-card-btn {
             position: absolute;
@@ -332,9 +346,9 @@
         <div class="column">
             <div class="column-header">Refinement</div>
             <div class="card-container">
-                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1Zo1rSk_5_7C56bFkthWRFLe5a5S_HNOANlZ0jQzQBXg/edit?tab=t.0" data-keyword="kids"><span class="card-emoji">🧸</span><span class="card-text">Puncs</span><button class="delete-card-btn">×</button><span class="link-icon">🔗</span></div>
-                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/16BTwrhExgb6CMkivmjfzy7AGaEU8CsfoFLoRxzn469w/edit?tab=t.qa6wmdvo2532" data-keyword="fiction"><span class="card-emoji">📖</span><span class="card-text">Fire, Fang, and Feather</span><button class="delete-card-btn">×</button><span class="link-icon">🔗</span></div>
-                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1gjbXVq_jU1rXXMT6NfEwoYh2SFhgOosuVCwmW5O-AtQ/edit?tab=t.0" data-keyword="fiction"><span class="card-emoji">📖</span><span class="card-text">Blood Money</span><button class="delete-card-btn">×</button><span class="link-icon">🔗</span></div>
+                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1Zo1rSk_5_7C56bFkthWRFLe5a5S_HNOANlZ0jQzQBXg/edit?tab=t.0" data-keyword="kids"><span class="card-emoji">🧸</span><span class="card-text">Puncs</span><button class="delete-card-btn">×</button><span class="link-icon"><i class="fa-solid fa-link"></i></span></div>
+                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/16BTwrhExgb6CMkivmjfzy7AGaEU8CsfoFLoRxzn469w/edit?tab=t.qa6wmdvo2532" data-keyword="fiction"><span class="card-emoji">📖</span><span class="card-text">Fire, Fang, and Feather</span><button class="delete-card-btn">×</button><span class="link-icon"><i class="fa-solid fa-link"></i></span></div>
+                <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1gjbXVq_jU1rXXMT6NfEwoYh2SFhgOosuVCwmW5O-AtQ/edit?tab=t.0" data-keyword="fiction"><span class="card-emoji">📖</span><span class="card-text">Blood Money</span><button class="delete-card-btn">×</button><span class="link-icon"><i class="fa-solid fa-link"></i></span></div>
                 
             </div>
         </div>
@@ -343,7 +357,7 @@
         <div class="column">
             <div class="column-header">Finished</div>
             <div class="card-container">
-            <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1GDPMHDunOvoB0lXUB31ZFGPCgQJ_zJRntCAISDXGvZ4/edit?tab=t.0#heading=h.4xgaqwmamhzs" data-keyword="fanfiction"><span class="card-emoji">❤️</span><span class="card-text">Starlight Express</span><button class="delete-card-btn">×</button><span class="link-icon">🔗</span></div></div>
+            <div class="card linked" draggable="true" data-url="https://docs.google.com/document/d/1GDPMHDunOvoB0lXUB31ZFGPCgQJ_zJRntCAISDXGvZ4/edit?tab=t.0#heading=h.4xgaqwmamhzs" data-keyword="fanfiction"><span class="card-emoji">❤️</span><span class="card-text">Starlight Express</span><button class="delete-card-btn">×</button><span class="link-icon"><i class="fa-solid fa-link"></i></span></div></div>
         </div>
     </div>
 
@@ -371,20 +385,25 @@
             let currentEditingCard = null;
 
             const emojiMap = {
-                "comics": "💬",
-                "fanfiction": "❤️",
-                "fiction": "📖",
-                "ideas": "💡",
-                "kids": "🧸",
-                "scripts": "🎬",
-                "spicy": "🌶️"
+                "comics": "fa-solid fa-comments",
+                "fanfiction": "fa-solid fa-heart",
+                "fiction": "fa-solid fa-book",
+                "ideas": "fa-solid fa-lightbulb",
+                "kids": "fa-solid fa-teddy-bear",
+                "scripts": "fa-solid fa-film",
+                "spicy": "fa-solid fa-pepper-hot"
             };
 
             function updateCardEmoji(card) {
                 const keyword = card.dataset.keyword;
                 const emojiSpan = card.querySelector('.card-emoji');
                 if (emojiSpan) {
-                    emojiSpan.textContent = emojiMap[keyword] || '';
+                    emojiSpan.innerHTML = ''; // Clear current
+                    if (emojiMap[keyword]) {
+                        const icon = document.createElement('i');
+                        icon.className = emojiMap[keyword];
+                        emojiSpan.appendChild(icon);
+                    }
                 }
             }
 
@@ -524,7 +543,7 @@
                     if (!currentEditingCard.querySelector('.link-icon')) {
                         const linkIcon = document.createElement('span');
                         linkIcon.className = 'link-icon';
-                        linkIcon.textContent = '🔗';
+                        linkIcon.innerHTML = '<i class="fa-solid fa-link"></i>';
                         currentEditingCard.appendChild(linkIcon);
                     }
                 } else {
@@ -536,12 +555,7 @@
 
                 // Update Emoji
                 currentEditingCard.dataset.keyword = newKeyword;
-                const emojiSpan = currentEditingCard.querySelector('.card-emoji');
-                if (emojiMap[newKeyword]) {
-                    emojiSpan.textContent = emojiMap[newKeyword];
-                } else {
-                    emojiSpan.textContent = '';
-                }
+                updateCardEmoji(currentEditingCard);
 
                 closeEditModal();
             }
