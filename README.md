@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This project has been consolidated into **[Writer's EDC](https://github.com/sthomasmcclane/writers-edc)**. This repository is now legacy and has been **Archived**. The code remains available for reference, but no further updates will be made here.
+
 # 📋 Writing Board
 
 A standalone, web-based Kanban board for managing writing projects and ideas.
